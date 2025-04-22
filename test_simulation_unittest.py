@@ -17,7 +17,8 @@ class TestSimulation(unittest.TestCase):
         results = sim.get_results(collisions)
         logging.debug(f"Simulation results: {results}")
         print(f"Test: test_single_car_movement\nResults: {results}\n")
-        self.assertIn("- A, (5,4) S", results)
+        with self.subTest("Check final position of car A"):
+            self.assertIn("- A, (5,4) S", results)
         logging.info("Completed test: test_single_car_movement")
         print("Test test_single_car_movement passed.\n")
 
@@ -34,8 +35,10 @@ class TestSimulation(unittest.TestCase):
         results = sim.get_results(collisions)
         logging.debug(f"Simulation results: {results}")
         print(f"Test: test_multiple_car_collision\nResults: {results}\n")
-        self.assertIn("- A, collides with B at (5, 4) at step 7", results[0])
-        self.assertIn("- B, collides with A at (5, 4) at step 7", results[1])
+        with self.subTest("Check collision details for car A"):
+            self.assertIn("- A, collides with B at (5, 4) at step 7", results[0])
+        with self.subTest("Check collision details for car B"):
+            self.assertIn("- B, collides with A at (5, 4) at step 7", results[1])
         logging.info("Completed test: test_multiple_car_collision")
         print("Test test_multiple_car_collision passed.\n")
 
