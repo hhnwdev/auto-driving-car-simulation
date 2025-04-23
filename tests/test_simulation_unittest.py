@@ -1,5 +1,6 @@
 import unittest
 import logging
+from unittest.mock import patch
 from car_simulation import Simulation
 
 # Configure logging
