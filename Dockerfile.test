@@ -1,18 +1,42 @@
-# Use Alpine-based Python image
-FROM python:3.13-alpine
+# Step 1: Base Stage (for installing dependencies)
+FROM python:3.13-alpine AS base
 
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# Set working directory
 WORKDIR /app
 
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev
+# Install build dependencies (gcc, musl-dev for compiling)
+RUN apk add --no-cache --virtual .build-deps gcc musl-dev libffi-dev make
 
-COPY requirements.txt .
+# Copy the requirements file into the container
+COPY requirements.txt requirements.txt
+
+# Install Python dependencies (including coverage for test reporting)
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Remove build dependencies after installing Python packages
 RUN apk del .build-deps
 
+# Step 2: Test Stage (copy source code and test files)
+FROM python:3.13-alpine AS test
+
+# Set working directory for test container
+WORKDIR /app
+
+# Install build dependencies (make for running tests)
+RUN apk add --no-cache make
+
+# Copy installed dependencies from base stage
+COPY --from=base /usr/local /usr/local
+
+# Copy application source code and test files for unit testing
 COPY . .
 
-CMD ["make", "test"]
+# Install test dependencies (including coverage)
+RUN pip install --no-cache-dir coverage
+
+# Set the default command to run the tests with coverage
+CMD ["make", "coverage"]

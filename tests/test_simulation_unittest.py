@@ -42,5 +42,19 @@ class TestSimulation(unittest.TestCase):
         logging.info("Completed test: test_multiple_car_collision")
         print("Test test_multiple_car_collision passed.\n")
 
+    def test_car_str(self):
+        sim = Simulation(10, 10)
+        sim.add_car('A', 1, 2, 'N', 'FFRFFFFRRL')
+        car = sim.cars[0]  # Access the car object
+        expected_str = "A, (1,2) N"  # Adjust the expected output if necessary
+        self.assertEqual(str(car), expected_str)
+
+    def test_get_car_info(self):
+        sim = Simulation(10, 10)
+        sim.add_car('A', 1, 2, 'N', 'FFRFFFFRRL')
+        car_info = sim.get_car_info()
+        expected_info = ["- A, (1,2) N, FFRFFFFRRL"]  # Adjust if necessary
+        self.assertEqual(car_info, expected_info)
+
 if __name__ == '__main__':
     unittest.main()
