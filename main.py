@@ -7,7 +7,12 @@ def main():
         print("Welcome to Auto Driving Car Simulation!")
 
         # Prompt user for field dimensions
-        width, height = map(int, input("Please enter the width and height of the simulation field in x y format:\n").split())
+        while True:
+            try:
+                width, height = map(int, input("Please enter the width and height of the simulation field in x y format:\n").split())
+                break
+            except ValueError:
+                print("Invalid input. Please enter two integers separated by a space.")
         sim = Simulation(width, height)
         print(f"You have created a field of {width} x {height}.")
 
@@ -27,7 +32,11 @@ def main():
                     continue
 
                 # Get movement commands for the car
-                commands = input(f"Please enter the commands for car {name}:\n").strip().upper()
+                while True:
+                    commands = input(f"Please enter the commands for car {name}:\n").strip().upper()
+                    if all(c in "FLR" for c in commands):  # Validate commands
+                        break
+                    print("Invalid commands. Use only F, L, R.")
 
                 # Add the car to simulation
                 sim.add_car(name, int(x), int(y), direction, commands)
@@ -38,6 +47,11 @@ def main():
                     print(info)
 
             elif choice == '2':
+                # Check if there are cars to simulate
+                if not sim.cars:
+                    print("No cars available to simulate. Please add cars first.")
+                    continue
+
                 # Display cars before running simulation
                 print("Your current list of cars are:")
                 for info in sim.get_car_info():
