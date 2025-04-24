@@ -1,0 +1,5 @@
+# For main app
+flask  # Example dependency, adjust based on your app
+
+# For tests
+coverage
