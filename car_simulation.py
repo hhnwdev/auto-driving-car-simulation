@@ -67,10 +67,12 @@ class Simulation:
         self.cars.append(Car(name, x, y, direction, commands))
 
     def simulate(self):
-        # Main simulation logic
+        if not self.cars:
+            return {}  # No cars to simulate, return empty collisions
+        max_steps = max(len(car.commands) for car in self.cars)  # Max command length
+
         car_count = len(self.cars)
         collisions = {}                                # Track any collisions
-        max_steps = max(len(car.commands) for car in self.cars)  # Max command length
 
         # Run simulation step by step
         for step in range(max_steps):
