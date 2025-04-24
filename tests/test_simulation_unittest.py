@@ -1,12 +1,16 @@
 import unittest
 import logging
+import main
 from unittest.mock import patch
+from unittest import mock
 from car_simulation import Simulation
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class TestSimulation(unittest.TestCase):
+    
+    # Existing unit tests
     def test_single_car_movement(self):
         logging.info("Starting test: test_single_car_movement")
         print("\nRunning test: test_single_car_movement")
@@ -56,6 +60,57 @@ class TestSimulation(unittest.TestCase):
         car_info = sim.get_car_info()
         expected_info = ["- A, (1,2) N, FFRFFFFRRL"]  # Adjust if necessary
         self.assertEqual(car_info, expected_info)
+
+    # New unit tests for main.py scenarios
+
+    def test_scenario_single_car_simulation(self):
+        # Simulate user inputs for a single car simulation
+        mock_inputs = [
+            "10 10",              # Field size
+            "1",                  # Add car
+            "A",                  # Car name
+            "1 2 N",              # Car position
+            "FFRFFFFRRL",         # Car commands
+            "2",                  # Run simulation
+            "2"                   # Exit
+        ]
+
+        # Mock user input and print statements
+        with mock.patch("builtins.input", side_effect=mock_inputs):
+            with mock.patch("builtins.print") as mocked_print:
+                main.main()  # Run the main function
+
+                # Check if the correct simulation result is printed
+                mocked_print.assert_any_call("After simulation, the result is:")
+                mocked_print.assert_any_call("- A, (5,4) S")
+                mocked_print.assert_any_call("Thank you for running the simulation. Goodbye!")
+
+    def test_scenario_multiple_car_collision(self):
+        # Simulate user inputs for a multiple cars collision simulation
+        mock_inputs = [
+            "10 10",              # Field size
+            "1",                  # Add car A
+            "A",                  # Car name
+            "1 2 N",              # Car position
+            "FFRFFFFRRL",         # Car commands
+            "1",                  # Add car B
+            "B",                  # Car name
+            "7 8 W",              # Car position
+            "FFLFFFFFFF",         # Car commands
+            "2",                  # Run simulation
+            "2"                   # Exit
+        ]
+
+        # Mock user input and print statements
+        with mock.patch("builtins.input", side_effect=mock_inputs):
+            with mock.patch("builtins.print") as mocked_print:
+                main.main()  # Run the main function
+
+                # Check if the correct simulation result is printed for collisions
+                mocked_print.assert_any_call("After simulation, the result is:")
+                mocked_print.assert_any_call("- A, collides with B at (5, 4) at step 7")
+                mocked_print.assert_any_call("- B, collides with A at (5, 4) at step 7")
+                mocked_print.assert_any_call("Thank you for running the simulation. Goodbye!")
 
 if __name__ == '__main__':
     unittest.main()
