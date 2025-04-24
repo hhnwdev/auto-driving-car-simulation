@@ -53,12 +53,12 @@ python main.py
 Using Docker
 1. Build the Docker image:
 ```
-docker build -t car-simulation .
+docker build -f Dockerfile -t car-simulation .
 ```
 
 2. Run the container:
 ```
-docker run --rm car-simulation
+docker run --rm -it car-simulation
 ```
 
 ## Running Tests
@@ -77,6 +77,11 @@ docker build -f Dockerfile.test -t car-simulation-test .
 2. Run the tests in a container:
 ```
 docker run --rm car-simulation-test
+```
+OR
+```
+# To copy the coverage report
+docker run --rm -v $(pwd)/htmlcov:/app/htmlcov car-simulation-test
 ```
 
 ## Code Coverage
